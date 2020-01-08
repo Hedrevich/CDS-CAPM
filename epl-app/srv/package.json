@@ -1,0 +1,27 @@
+{
+    "name": "project-srv",
+    "version": "1.0.0",
+    "dependencies": {
+        "@sap/cds": "^3.18.3",
+        "express": "^4.17.1",
+        "@sap/hana-client": "^2.4.144"
+    },
+    "engines": {
+        "node": "^10"
+    },
+    "scripts": {
+        "start": "cds serve gen/csn.json",
+        "postinstall": "npm dedupe && node .build.js",
+        "start2": "node ./node_modules/@sap/cds/bin/cds.js serve gen/csn.json",
+        "watch": "nodemon -w . -i node_modules/**,.git/** -e cds -x npm run build"
+    },
+    "private": true,
+    "cds": {
+        "requires": {
+            "db": {
+                "kind": "hana",
+                "model": "gen/csn.json"
+            }
+        }
+    }
+}

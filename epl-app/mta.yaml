@@ -1,0 +1,55 @@
+_schema-version: 2.0.0
+ID: sap-cap-epl
+version: 1.0.0
+modules:
+  - name: sap-cap-epl-db
+    type: hdb
+    path: db
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+    requires:
+      - name: sap-cap-epl-db-hdi-container
+  - name: sap-cap-epl-srv
+    type: nodejs
+    path: srv
+    parameters:
+      memory: 512M
+      disk-quota: 256M
+    provides:
+      - name: srv_api
+        properties:
+          url: ${default-url}
+    requires:
+      - name: sap-cap-epl-db-hdi-container
+      - name: sap-cap-epl-uaa
+  - name: sap-cap-epl-ui
+    type: nodejs
+    path: app
+    parameters:
+      memory: 256M
+      disk-quota: 256M
+    requires:
+      - name: sap-cap-epl-uaa
+      - name: srv_api
+        group: destinations
+        properties: 
+          forwardAuthToken: true
+          strictSSL: true
+          name: srv_api
+          url: ~{url}
+resources:
+  - name: sap-cap-epl-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-plan: application
+      service: xsuaa
+      config:
+        xsappname: sap-cap-epl-${space}
+        tenant-mode: dedicated
+  - name: sap-cap-epl-db-hdi-container
+    type: com.sap.xs.hdi-container
+    properties:
+      hdi-container-name: ${service-name}
+    parameters:
+      service: hanatrial

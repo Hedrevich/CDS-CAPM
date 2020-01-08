@@ -1,0 +1,29 @@
+{
+    "build": {
+        "target": ".",
+        "tasks": [
+            {
+                "for": "hana",
+                "src": "db",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "index.cds"
+                    ]
+                }
+            },
+            {
+                "for": "node-cf",
+                "src": "srv",
+                "options": {
+                    "model": [
+                        "db",
+                        "srv",
+                        "index.cds"
+                    ]
+                }
+            }
+        ]
+    }
+}
